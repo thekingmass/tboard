@@ -1,0 +1,71 @@
+.board-column{
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-radius: 10px;
+    /* background-color: #F8F9FA; */
+    background-color: #E3F2FD;
+    box-sizing: border-box;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.board-column-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* border: 1px solid green; */
+}
+
+.board-column-body{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.add-task-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+       
+}
+
+.add-task-button-container button{
+    width: 100%;
+    background-color: rgb(154, 80, 239);
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+
+}
+
+.task-creation-form{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group input, textarea{
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-group button{
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(154, 80, 239);
+    color: white;
+    cursor: pointer;
+}

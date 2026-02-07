@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // File Layout
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // Environment Settings
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "moduleResolution": "node",
+    "types": ["node"],
+
+    // Interop & module behavior
+    "esModuleInterop": true,
+
+    // Outputs
+    "sourceMap": true,
+    // You can set these to false or remove them if you don't need .d.ts files:
+    "declaration": false,
+    "declarationMap": false,
+
+    // Stricter Typechecking Options (optional but okay to keep)
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Recommended Options
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

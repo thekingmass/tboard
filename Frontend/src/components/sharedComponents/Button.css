@@ -1,0 +1,16 @@
+.btn-component{
+    background: #2b83f6;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    padding: 0px 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    width: auto;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

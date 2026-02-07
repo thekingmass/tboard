@@ -1,0 +1,108 @@
+.AppLayout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+}
+
+.AppMain {
+    flex: 1;
+}
+
+.Logo h1{
+    color : #3B82F6;
+    margin: 0px;
+}
+
+.Logo img {
+    height: 40px;
+    width: auto;
+    border-radius: 6px;
+}
+
+
+.AppHeader{
+    /* background-color: #f9fbfd;  */
+    padding: 1px 10px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.userInfo{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.login-signup-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 5px;
+}
+
+.userInitial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    font-weight: 800;
+    font-size: large;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e4b2fd;
+    background-color: #6c63ff;
+    cursor: pointer;
+}
+
+.logOutButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2f80ed, #56ccf2);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    user-select: none;
+}
+
+.logOutIcon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.logOutIcon:hover{
+    display: block;
+}
+
+.AppFooter{
+    display:flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.MainContainer{
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    flex: 1;
+    min-height: 80vh;
+    background-color: #F8FAFC;
+    
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px; 
+    margin: 20px;
+}
+

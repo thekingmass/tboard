@@ -1,0 +1,104 @@
+.HomePage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 90vh; /* responsive height */
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: contain;
+  background-color: #e2eefb;
+  overflow: hidden;
+}
+
+.topHomePage {
+  flex: 1;
+  width: 100%;
+}
+
+.bottomHomePage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+}
+
+.ourServices {
+  /* Keeps the grid to max ~3 cards wide while still responsive */
+  width: min(900px, 92vw);
+  color: #1e3a51;
+}
+
+.ourServices h2 {
+  margin: 0 0 10px;
+  font-size: 1.6rem;
+}
+
+.ourServices p {
+  margin: 0 0 16px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.ourServicesGrid {
+  display: grid;
+  gap: 14px;
+  /* Max 3 per row, and shrink/wrap automatically as space reduces */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Below 1676px, show at most 2 cards per row */
+@media screen and (max-width: 1675px) {
+  .ourServices {
+    width: min(680px, 92vw);
+  }
+
+  .ourServicesGrid {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+
+.welcomeMessage {
+  color: #1e3a51;
+  margin-left: 21px;
+  display: flex;
+  flex-direction: row;
+}
+
+.welcomeMessage > .span2 {
+  margin-left: 5px;
+}
+
+.welcomeMessage > p {
+  margin: 0;
+}
+
+.homePageButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-left: 21px;
+}
+
+.learn-more-btn > Button {
+  background-color: #ffffff;
+  color: #2b83f6;
+}
+
+@media screen and (max-width: 780px) {
+  .welcomeMessage {
+    flex-direction: column;
+  }
+
+  .ourServices {
+    width: min(520px, 92vw);
+    color: #1e3a51;
+  }
+
+  .ourServicesGrid {
+    grid-template-columns: 1fr;
+  }
+}

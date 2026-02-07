@@ -1,0 +1,83 @@
+.task-card{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    /* border: 1px solid aqua */
+}
+
+.tag-container{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.task-tags{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-right: 2px;
+    margin-top: 5px;
+    
+}
+
+.tags{
+    display: flex;
+    align-items: center;
+    gap:2px;
+    margin: 2px;
+    background-color: #c4ceff;
+    padding : 3px;
+    border-radius: 10px;
+    font-size: small;
+
+}
+
+.tag-remove-icon{
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    transition: background 0.2s ease;
+}
+
+.tag-remove-icon:hover{
+    color: #fa5f7e;
+}
+
+.addTagButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 22px;
+    border-radius: 50%
+}
+
+.addTagButton:hover{
+    color: yellow;
+    background: green;
+}
+
+.addTag-form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.addTag-form input{
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.addTag-form button{
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(154, 80, 239);
+    color: white;
+    cursor: pointer;
+}

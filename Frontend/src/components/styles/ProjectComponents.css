@@ -1,0 +1,6 @@
+.FilterSort{
+    display: flex;
+    /* border: 1px solid red; */
+    justify-content: flex-end;
+    margin-right: 10px;;
+}
