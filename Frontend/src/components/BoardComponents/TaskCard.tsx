@@ -4,9 +4,13 @@ import type { Priority } from "../../types";
 import "./TaskCard.css";
 import { CiCirclePlus } from "react-icons/ci";
 import { RxCrossCircled } from "react-icons/rx";
+import { MdOutlineEdit } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 import Modal from "../sharedComponents/Modal";
 
 import { Draggable } from "@hello-pangea/dnd";
+import { api } from "../../api";
+import { toast } from "sonner";
 
 interface TaskCardProps {
   id: string;
@@ -14,6 +18,7 @@ interface TaskCardProps {
   title: string;
   priority: Priority;
   tags: string[];
+  updateUiOnDelete?: (taskId: string) => void;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({
@@ -22,15 +27,43 @@ const TaskCard: React.FC<TaskCardProps> = ({
   title,
   priority,
   tags,
+  updateUiOnDelete
 }) => {
   const priorityColor =
     priority === "high"
       ? "#e53e3e"
       : priority === "medium"
-      ? "#d69e2e"
-      : "#38a169";
+        ? "#d69e2e"
+        : "#38a169";
 
   const [isAddTagVisible, setIsAddTagVisible] = useState(false);
+
+  const handleTaskDeleteClick = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    try {
+      const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task?",
+    );
+    if (confirmDelete) {
+      // Call API to delete task here
+      await api.delete(`/api/tasks/deleteTask/${id}`);
+      toast.success("Task deleted successfully");
+      console.log("Task deleted with ID:", id);
+
+      // Call onDelete callback to update parent component
+      if (updateUiOnDelete) {
+        updateUiOnDelete(id);
+      }
+
+    } else {
+      console.log("Task deletion cancelled.");
+    }
+    console.log("Delete task with ID:", id);
+    } catch (error) {
+      console.log("Error deleting task:", error);
+      toast.error("Error deleting task:");
+    }
+  };
 
   return (
     // make the task card draggable by wrapping it with Draggable component
@@ -41,10 +74,21 @@ const TaskCard: React.FC<TaskCardProps> = ({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          task-data-id={id}
         >
           <div className="task-card-header">
-            <span className="task-title">{title}</span>
-            <span className="task-card-actions">Edit</span>
+            <div className="task-title">{title}</div>
+            <div className="task-card-actions">
+              <span className="task-card-edit-icon">
+                <MdOutlineEdit />
+              </span>
+              <span
+                onClick={handleTaskDeleteClick}
+                className="task-card-delete-icon"
+              >
+                <MdDeleteForever />
+              </span>
+            </div>
           </div>
 
           <div className="task-card-footer">
@@ -79,8 +123,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
             >
               <div className="addTagmodal-body">
                 <form action="" className="addTag-form">
-                    <input type="text" placeholder="Enter tag name" />
-                    <button onClick={() => {}}>Add Tag</button>
+                  <input type="text" placeholder="Enter tag name" />
+                  <button onClick={() => {}}>Add Tag</button>
                 </form>
               </div>
             </Modal>

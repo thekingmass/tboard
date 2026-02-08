@@ -14,7 +14,8 @@ interface ColumnProps {
   projectId: string;
   title: string;
   tasks: Task[];
-  onTaskCreated?: (task: Task) => void;
+  updateUiOnTaskCreation?: (task: Task) => void;
+  updateUiOnDelete?: (taskId: string) => void;
 }
 
 const Column: React.FC<ColumnProps> = ({
@@ -22,7 +23,8 @@ const Column: React.FC<ColumnProps> = ({
   projectId,
   title,
   tasks,
-  onTaskCreated,
+  updateUiOnTaskCreation,
+  updateUiOnDelete,
 }) => {
   // console.log("tasks in column:", title, tasks);
 
@@ -70,7 +72,7 @@ const Column: React.FC<ColumnProps> = ({
       const newTask: Task = mapApiTaskToTask(res.data.task);
 
       // Update UI immediately (no refresh) by informing the parent.
-      onTaskCreated?.(newTask);
+      updateUiOnTaskCreation?.(newTask);
 
       //reset the form fields
       setTaskTitle("");
@@ -159,6 +161,7 @@ const Column: React.FC<ColumnProps> = ({
                 title={task.title}
                 priority={task.priority}
                 tags={task.tags}
+                updateUiOnDelete={updateUiOnDelete}
               />
             ))}
             {provided.placeholder}

@@ -24,7 +24,7 @@ export function requireValidObjectId(id: string | undefined, name: string) {
   return new Types.ObjectId(id);
 }
 
-export async function requireAccessibleProject(params: { projectId: string | undefined; userId: string }) {
+export async function requireAccessibleProject(params: { projectId: string | undefined; userId: string}) {
   const { projectId, userId } = params;
 
   if (!projectId) {

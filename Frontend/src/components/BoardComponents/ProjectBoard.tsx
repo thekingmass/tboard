@@ -36,12 +36,16 @@ const ProjectBoard: React.FC = () => {
   const [columns, setColumns] = useState<UiColumn[]>([]);
   const [projectData, setProjectData] = useState<UiProject | null>(null);
 
-  const handleTaskCreated = (task: UiTask) => {
+  const updateUiOnTaskCreation = (task: UiTask) => {
     setTasks((prev) => {
       // Avoid duplicates if API returns and UI already has it.
       if (prev.some((t) => t.id === task.id)) return prev;
       return [...prev, task];
     });
+  };
+
+  const updateUiOnDelete = (taskId: string) => {
+    setTasks((prev) => prev.filter((task) => task.id !== taskId));
   };
 
   const onDragEnd = async (result: DropResult) => {
@@ -201,7 +205,8 @@ const ProjectBoard: React.FC = () => {
                   projectId={projectId!}
                   title={column.title}
                   tasks={tasks.filter((task) => task.columnId === column.id)}
-                  onTaskCreated={handleTaskCreated}
+                  updateUiOnTaskCreation={updateUiOnTaskCreation}
+                  updateUiOnDelete={updateUiOnDelete}
                 />
               ))}
             </div>

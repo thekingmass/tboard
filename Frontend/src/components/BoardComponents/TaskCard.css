@@ -14,6 +14,31 @@
     justify-content: space-between;
     align-items: center;
     gap: 5px;
+    /* margin: 1px; */
+}
+
+.task-card-actions{
+    display: flex;
+}
+
+.task-card-edit-icon{
+    cursor: pointer;
+    /* color: #4caf50; */
+}   
+
+.task-card-delete-icon {
+    cursor: pointer;
+    /* color: #f44336; */
+}
+
+.task-card-edit-icon:hover {
+    transform: scale(1.2);
+    color: #4caf50;
+}
+
+.task-card-delete-icon:hover {
+    transform: scale(1.2);
+    color: #f44336;
 }
 
 .tag-container{
@@ -27,6 +52,7 @@
     flex-direction: row;
     margin-right: 2px;
     margin-top: 5px;
+    flex-wrap: wrap;
     
 }
 

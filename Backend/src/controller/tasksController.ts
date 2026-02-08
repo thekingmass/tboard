@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import mongoose, { Types } from 'mongoose';
 import ProjectModel from '../models/ProjectModel';
-import ColumnModel from '../models/ColumnModel';
 import TasksModel from '../models/TasksModel';
 import { HttpError, requireAccessibleProject, requireAuthUserId, requireValidObjectId } from '../utils/validation';
 
@@ -229,8 +228,6 @@ export const createTaskForProject = async (req: Request, res: Response) => {
         requireValidObjectId(projectId, 'projectId');
         await requireAccessibleProject({ projectId, userId });
 
-
-
         const rawTags = String(tags ?? '')
             .split(',')
             .map((t) => t.trim())
@@ -274,3 +271,42 @@ export const createTaskForProject = async (req: Request, res: Response) => {
 
 }
 
+
+export const deleteTask = async (req: Request, res: Response) => {
+    try {
+        const userId = req.auth?.sub;
+
+        requireValidObjectId(userId, 'userId');
+        requireAuthUserId(userId);
+
+        const { taskId } = req.params;
+
+        if(!taskId){
+            return res.status(400).json({ message: 'taskId is required' });
+        }
+        requireValidObjectId(taskId, 'taskId'); 
+
+        // Check if the task exists and get its projectId if it exists
+        const taskResponse = await TasksModel.findById(taskId).lean();
+
+        if(!taskResponse) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        const projectId = taskResponse.projectId?.toString();
+
+        if(!projectId){
+            return res.status(400).json({ message: 'Associated projectId not found for the task' });
+        }
+
+        userId && projectId && await requireAccessibleProject({ projectId, userId });
+
+        const deleteResult = await TasksModel.deleteOne({ _id: new Types.ObjectId(taskId) });
+
+        res.status(200).json({ message: 'Task deleted successfully', deletedCount: deleteResult.deletedCount });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message : "Internal server error"});
+    }
+}
