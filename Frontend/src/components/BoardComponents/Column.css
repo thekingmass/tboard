@@ -1,14 +1,14 @@
 .board-column{
-    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     padding: 10px;
     border-radius: 10px;
-    /* background-color: #F8F9FA; */
     background-color: #E3F2FD;
     box-sizing: border-box;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    flex: 1 1 300px;
+    min-width: 220px;
+    max-width: 420px;
 }
 
 .board-column-header{
@@ -23,6 +23,15 @@
     display: flex;
     flex-direction: column;
     padding: 5px;
+}
+
+/* Make columns stack on small screens */
+@media (max-width: 720px) {
+    .board-column {
+        flex: 1 1 100%;
+        min-width: 100%;
+        max-width: 100%;
+    }
 }
 
 .add-task-button-container{

@@ -44,6 +44,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
         >
           <div className="task-card-header">
             <span className="task-title">{title}</span>
+            <span className="task-card-actions">Edit</span>
           </div>
 
           <div className="task-card-footer">

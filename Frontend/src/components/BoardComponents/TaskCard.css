@@ -5,7 +5,15 @@
     padding: 5px;
     border-radius: 10px;
     background-color: #FFFFFF;
+    flex-wrap: wrap;
     /* border: 1px solid aqua */
+}
+
+.task-card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
 }
 
 .tag-container{

@@ -192,8 +192,8 @@
 
 
 .board-content-container{
-  display: flex;
-  overflow-x: auto;
+	display: flex;
+	overflow-x: hidden;
   padding: 20px;
   height: 100%;
   flex: 1 1 auto;
@@ -201,11 +201,13 @@
 }
 
 .columns-container{
-  display: flex;
-  gap: 15px;
-  padding: 20px;    
-  overflow-y: auto;
-  width: 100%;
+	display: flex;
+	gap: 15px;
+	padding: 20px;   
+	overflow-y: auto;
+	width: 100%;
+	flex-wrap: wrap;
+	align-items: flex-start;
 }
 
 
