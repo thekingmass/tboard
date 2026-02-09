@@ -41,7 +41,7 @@ export const getNumberOfOpenTasks = async (req: Request, res: Response) => {
             status: { $not: { $in: ['completed', 'blocked'] } },
         });
 
-        res.status(200).json( openTasks );
+        res.status(200).json(openTasks);
 
     } catch (err: any) {
         const status = err instanceof HttpError ? err.statusCode : 500;
@@ -61,7 +61,7 @@ export const getNumberOfCompletedTasks = async (req: Request, res: Response) => 
             status: 'completed',
         });
 
-        res.status(200).json( completedTasks );
+        res.status(200).json(completedTasks);
     } catch (err: any) {
         const status = err instanceof HttpError ? err.statusCode : 500;
         res.status(status).json({ message: err?.message ?? 'Internal server error' });
@@ -216,6 +216,32 @@ export const updateTaskOnDragEnd = async (req: Request, res: Response) => {
     }
 };
 
+// Takes the raw tags string and split it with comma and trim the spaces. Also validates the tags for the allowed format. If any tag is invalid, it throws an error with the message about the invalid format.
+const requireValidTagFormat = (res: Response, tags: string) => {
+    const rawTags = String(tags ?? '')
+        .split(',')
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0);
+
+    // Reject the request if any tag contains whitespace inside (spaces, tabs, etc.)
+    const hasWhitespaceInside = rawTags.some((t) => /\s/.test(t));
+    if (hasWhitespaceInside) {
+        return res.status(400).json({
+            message: 'Tags must not contain spaces. Use single words like "frontend" or use "-" like "front-end".',
+        });
+    }
+
+    // Rejects the request if any tag contains letters other than a-z A-Z 0-9 and _,- characters
+    const invalidChars = rawTags.some((t) => !/^[A-Za-z0-9_-]+$/.test(t));
+    if (invalidChars) {
+        return res.status(400).json({
+            message: 'Tags may only contain letters, numbers, "_" or "-".',
+        });
+    }
+
+    return rawTags;
+
+}
 
 export const createTaskForProject = async (req: Request, res: Response) => {
     try {
@@ -281,21 +307,21 @@ export const deleteTask = async (req: Request, res: Response) => {
 
         const { taskId } = req.params;
 
-        if(!taskId){
+        if (!taskId) {
             return res.status(400).json({ message: 'taskId is required' });
         }
-        requireValidObjectId(taskId, 'taskId'); 
+        requireValidObjectId(taskId, 'taskId');
 
         // Check if the task exists and get its projectId if it exists
         const taskResponse = await TasksModel.findById(taskId).lean();
 
-        if(!taskResponse) {
+        if (!taskResponse) {
             return res.status(404).json({ message: 'Task not found' });
         }
 
         const projectId = taskResponse.projectId?.toString();
 
-        if(!projectId){
+        if (!projectId) {
             return res.status(400).json({ message: 'Associated projectId not found for the task' });
         }
 
@@ -307,6 +333,50 @@ export const deleteTask = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({message : "Internal server error"});
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+export const updateTaskDetails = async (req: Request, res: Response) => {
+    try {
+        const userId = req.auth?.sub;
+        requireAuthUserId(userId);
+        requireValidObjectId(userId, 'userId');
+
+        const { title, priority, tags } = req.body;
+
+        const { taskId } = req.params;
+        requireValidObjectId(taskId, 'taskId');
+        const task = await TasksModel.findById(taskId).lean();
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        const projectId = task.projectId.toString();
+        projectId && userId && await requireAccessibleProject({ projectId, userId });
+
+        // Updating the task details
+
+        const taskTags = requireValidTagFormat(res, tags);
+        if (!taskTags) {
+            return;
+        }
+
+        const updateResponse = await TasksModel.findByIdAndUpdate(
+            taskId,
+            { title, priority, tags: taskTags },
+            { new: true }
+        );
+
+        if (!updateResponse) {
+            return res.status(500).json({ message: "Failed to update the task" });
+        }
+
+        res.status(200).json({ message: "Task updated successfully", updateResponse });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 }

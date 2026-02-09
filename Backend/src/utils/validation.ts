@@ -10,6 +10,8 @@ export class HttpError extends Error {
   }
 }
 
+
+// Ensures that a userId is present (i.e., the user is authenticated).
 export function requireAuthUserId(userId: string | undefined) {
   if (!userId) {
     throw new HttpError(401, 'Not authenticated');

@@ -16,6 +16,7 @@ interface ColumnProps {
   tasks: Task[];
   updateUiOnTaskCreation?: (task: Task) => void;
   updateUiOnDelete?: (taskId: string) => void;
+  updateUiOnTaskUpdate?: (updatedTask: Task) => void;
 }
 
 const Column: React.FC<ColumnProps> = ({
@@ -25,6 +26,7 @@ const Column: React.FC<ColumnProps> = ({
   tasks,
   updateUiOnTaskCreation,
   updateUiOnDelete,
+  updateUiOnTaskUpdate,
 }) => {
   // console.log("tasks in column:", title, tasks);
 
@@ -99,10 +101,10 @@ const Column: React.FC<ColumnProps> = ({
       <Modal
         isOpen={taskModalOpen}
         onClose={() => setTaskModal(false)}
-        title="Create A New Task"
+        title={"Create A New Task"}
       >
-        {/* Task creation form goes here */}
-        <form className="task-creation-form" onSubmit={onCreateTaskSubmit}>
+        {/* Task creation/Updation form goes here */}
+        <form className="task-creation-updation-form" onSubmit={onCreateTaskSubmit}>
           <div className="form-group">
             <label htmlFor="task-title">Task Title</label>
             <input
@@ -162,6 +164,7 @@ const Column: React.FC<ColumnProps> = ({
                 priority={task.priority}
                 tags={task.tags}
                 updateUiOnDelete={updateUiOnDelete}
+                updateUiOnTaskUpdate={updateUiOnTaskUpdate}
               />
             ))}
             {provided.placeholder}

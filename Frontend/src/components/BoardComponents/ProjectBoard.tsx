@@ -48,6 +48,14 @@ const ProjectBoard: React.FC = () => {
     setTasks((prev) => prev.filter((task) => task.id !== taskId));
   };
 
+  const updateUiOnTaskUpdate = (updatedTask: UiTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  };
+
   const onDragEnd = async (result: DropResult) => {
     // Handle drag and drop logic here
     console.log(typeof result, "Drag Result:->", result);
@@ -207,6 +215,7 @@ const ProjectBoard: React.FC = () => {
                   tasks={tasks.filter((task) => task.columnId === column.id)}
                   updateUiOnTaskCreation={updateUiOnTaskCreation}
                   updateUiOnDelete={updateUiOnDelete}
+                  updateUiOnTaskUpdate={updateUiOnTaskUpdate}
                 />
               ))}
             </div>

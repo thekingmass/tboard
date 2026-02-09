@@ -52,7 +52,7 @@
 
 }
 
-.task-creation-form{
+.task-creation-updation-form{
     display: flex;
     flex-direction: column;
     gap: 5px;

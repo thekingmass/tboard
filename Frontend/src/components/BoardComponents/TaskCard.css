@@ -95,19 +95,19 @@
     background: green;
 }
 
-.addTag-form{
+.modal-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.addTag-form input{
+.modal-form input{
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
 
-.addTag-form button{
+.modal-form button{
     padding: 5px;
     border-radius: 5px;
     border: none;
