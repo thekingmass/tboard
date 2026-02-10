@@ -36,6 +36,7 @@ const ProjectBoard: React.FC = () => {
   const [columns, setColumns] = useState<UiColumn[]>([]);
   const [projectData, setProjectData] = useState<UiProject | null>(null);
 
+
   const updateUiOnTaskCreation = (task: UiTask) => {
     setTasks((prev) => {
       // Avoid duplicates if API returns and UI already has it.
@@ -49,6 +50,22 @@ const ProjectBoard: React.FC = () => {
   };
 
   const updateUiOnTaskUpdate = (updatedTask: UiTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  };
+
+  const updateUiOnTagAdd = (updatedTask: UiTask) => { 
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  };
+
+  const updateUiOnTagRemove = (updatedTask: UiTask) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
@@ -216,6 +233,8 @@ const ProjectBoard: React.FC = () => {
                   updateUiOnTaskCreation={updateUiOnTaskCreation}
                   updateUiOnDelete={updateUiOnDelete}
                   updateUiOnTaskUpdate={updateUiOnTaskUpdate}
+                  updateUiOnTagAdd={updateUiOnTagAdd}
+                  updateUiOnTagRemove={updateUiOnTagRemove}
                 />
               ))}
             </div>
