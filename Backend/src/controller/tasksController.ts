@@ -218,10 +218,19 @@ export const updateTaskOnDragEnd = async (req: Request, res: Response) => {
 
 // Takes the raw tags string and split it with comma and trim the spaces. Also validates the tags for the allowed format. If any tag is invalid, it throws an error with the message about the invalid format.
 const requireValidTagFormat = (res: Response, tags: string) => {
+
     const rawTags = String(tags ?? '')
         .split(',')
         .map((t) => t.trim())
         .filter((t) => t.length > 0);
+
+    //Reject if any tag length is more than 15 characters
+    const hasTooLongTag = rawTags.some((t) => t.length > 15);
+    if (hasTooLongTag) {
+        return res.status(400).json({
+            message: 'Each tag must be at most 15 characters long.',
+        });
+    }
 
     // Reject the request if any tag contains whitespace inside (spaces, tabs, etc.)
     const hasWhitespaceInside = rawTags.some((t) => /\s/.test(t));
@@ -254,30 +263,17 @@ export const createTaskForProject = async (req: Request, res: Response) => {
         requireValidObjectId(projectId, 'projectId');
         await requireAccessibleProject({ projectId, userId });
 
-        const rawTags = String(tags ?? '')
-            .split(',')
-            .map((t) => t.trim())
-            .filter((t) => t.length > 0);
+        const taskTags = requireValidTagFormat(res, tags);
 
-        // Reject the request if any tag contains whitespace inside (spaces, tabs, etc.)
-        const hasWhitespaceInside = rawTags.some((t) => /\s/.test(t));
-        if (hasWhitespaceInside) {
-            return res.status(400).json({
-                message: 'Tags must not contain spaces. Use single words like "frontend" or use "-" like "front-end".',
-            });
+        if (!Array.isArray(taskTags)) {
+            return;
         }
 
-        // Rejects the request if any tag contains letters other than a-z A-Z 0-9 and _,- characters
-        const invalidChars = rawTags.some((t) => !/^[A-Za-z0-9_-]+$/.test(t));
-        if (invalidChars) {
-            return res.status(400).json({
-                message: 'Tags may only contain letters, numbers, "_" or "-".',
-            });
+        if (!taskTags) {
+            return;
         }
 
-        const taskTags = rawTags;
-
-        console.log(typeof taskTags, taskTags);
+        // console.log("Task Tag", typeof taskTags, taskTags);
 
         const taskCreationResult = await TasksModel.create({
             columnId: new Types.ObjectId(columnId),
@@ -348,7 +344,9 @@ export const updateTaskDetails = async (req: Request, res: Response) => {
 
         const { taskId } = req.params;
         requireValidObjectId(taskId, 'taskId');
+
         const task = await TasksModel.findById(taskId).lean();
+
         if (!task) {
             return res.status(404).json({ message: 'Task not found' });
         }
@@ -375,6 +373,95 @@ export const updateTaskDetails = async (req: Request, res: Response) => {
 
         res.status(200).json({ message: "Task updated successfully", updateResponse });
 
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const addTagToTask = async (req: Request, res: Response) => {
+    try {
+        const userId = req.auth?.sub;
+        const tagsToAdd = req.body.addNewTag;
+
+        requireAuthUserId(userId);
+        requireValidObjectId(userId, 'userId');
+
+        const { taskId } = req.params;
+        requireValidObjectId(taskId, 'taskId');
+
+        const task = await TasksModel.findById(taskId).lean();
+
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        const projectId = task.projectId.toString();
+
+        projectId && userId && await requireAccessibleProject({ projectId, userId });
+
+        //Adding tag to the existing task tags array
+
+        const formattedTagsArray = requireValidTagFormat(res, tagsToAdd);
+
+        console.log(formattedTagsArray);
+
+        if (!formattedTagsArray) {
+            return;
+        }
+
+        const updateResponse = await TasksModel.findByIdAndUpdate(
+            taskId,
+            { $addToSet: { tags: { $each: formattedTagsArray } } },
+            { new: true }
+        );
+
+        if (!updateResponse) {
+            return res.status(500).json({ message: "Failed to add tags to the task" });
+        }
+
+        res.status(200).json({ message: "Tags added successfully to the Task", updateResponse });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const deleteTagFromTask = async (req: Request, res: Response) => {
+    try {
+        const userId = req.auth?.sub;
+        const tagToDelete = req.body.tagToBeRemoved;
+        console.log(tagToDelete);
+
+        requireAuthUserId(userId);
+        requireValidObjectId(userId, 'userId');
+
+        const { taskId } = req.params;
+        requireValidObjectId(taskId, 'taskId');
+
+        const task = await TasksModel.findById(taskId).lean();
+
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        const projectId = task.projectId.toString();
+
+        projectId && userId && await requireAccessibleProject({ projectId, userId });
+
+        // Deleting tag from the existing task tags array
+        const updatedTaskPostTagDelete = await TasksModel.findByIdAndUpdate(
+            taskId,
+            { $pull: { tags: tagToDelete } },
+            { new: true }
+        );
+
+        if (!updatedTaskPostTagDelete) {
+            return res.status(500).json({ message: "Failed to delete tag from the task" });
+        }
+
+
+        res.status(200).json({ message: "Tag deleted successfully from the Task", updatedTaskPostTagDelete });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal server error" });

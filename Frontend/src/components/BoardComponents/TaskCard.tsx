@@ -21,6 +21,8 @@ interface TaskCardProps {
   tags: string[];
   updateUiOnDelete?: (taskId: string) => void;
   updateUiOnTaskUpdate?: (updatedTask: UiTask) => void;
+  updateUiOnTagAdd?: (updatedTask: UiTask) => void;
+  updateUiOnTagRemove?: (updatedTask: UiTask) => void;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({
@@ -31,6 +33,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
   tags,
   updateUiOnDelete,
   updateUiOnTaskUpdate,
+  updateUiOnTagAdd,
+  updateUiOnTagRemove,
 }) => {
   const priorityColor =
     priority === "high"
@@ -47,11 +51,41 @@ const TaskCard: React.FC<TaskCardProps> = ({
   const [taskPriority, setTaskPriority] = useState<string>(priority);
   const [taskTags, setTaskTags] = useState<string>(tags.join(", "));
 
+  //Add Tag Input field
+  const [addNewTag, setAddNewTag] = useState<string>("");
+
   const handleAddTagButtonClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsEditModalOpen(false);
     setIsAddTagVisible(true);
   };
+
+const handleAddTagSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try{
+      const response = await api.post(`/api/tasks/addTagToTask/${id}`, {
+        addNewTag
+      })
+
+      console.log("Add Tag Response:",response.data);
+      // Mapping the updated task from API response to UiTask
+      const updatedTask = mapApiTaskToTask(response.data.updateResponse
+);
+
+      console.log("Updated task",updatedTask);
+      toast.success(response.data.message);
+
+      setIsAddTagVisible(false);
+      setAddNewTag("");
+
+      // Inform parent component to update the UI
+      updateUiOnTagAdd?.(updatedTask);
+
+    } catch(error){
+      console.error("Error adding tag:", error);
+      toast.error("Failed to add tag.");
+    }
+  }
 
   const handleEditTaskClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -110,6 +144,29 @@ const TaskCard: React.FC<TaskCardProps> = ({
     }
   };
 
+  const removeTag = async(tagToBeRemoved: string) => {
+    // console.log("Removing tag:", tagToBeRemoved);
+    try {
+      const deleteTagResponse = await api.delete(`/api/tasks/deleteTagFromTask/${id}`,{
+        data: { tagToBeRemoved }
+      });
+
+      if(!deleteTagResponse || deleteTagResponse.status !== 200){
+        toast.error("Failed to remove tag.");
+        return;
+      }
+
+      //Mapping the updated task from API response to UiTask
+      const updatedTask = mapApiTaskToTask(deleteTagResponse.data.updatedTaskPostTagDelete);
+      // Inform parent component to update the UI
+      updateUiOnTagRemove?.(updatedTask);
+
+    } catch(error) {
+      console.error("Error removing tag:", error);
+      toast.error("Failed to remove tag.");
+    }
+  };
+
   return (
     // make the task card draggable by wrapping it with Draggable component
     <Draggable draggableId={id} index={index}>
@@ -157,7 +214,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
               {tags.map((tag) => (
                 <span key={tag} className="tags">
                   {tag}
-                  <RxCrossCircled className="tag-remove-icon" />
+                  <RxCrossCircled className="tag-remove-icon" onClick={() => removeTag(tag)} />
                 </span>
               ))}
               <span className="addTagButton">
@@ -168,12 +225,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
             <Modal
               isOpen={isAddTagVisible}
               onClose={() => setIsAddTagVisible(false)}
-              title="Add New Tag"
+              title="Add Tags"
             >
               <div className="addTagmodal-body">
-                <form action="" className="addTag-form modal-form">
-                  <input type="text" placeholder="Enter tag name" />
-                  <button onClick={() => {}}>Add Tag</button>
+                <form onSubmit={handleAddTagSubmit} className="addTag-form modal-form">
+                  <label htmlFor="tagToBeAdded">Use comma(,) for Multiple tags</label>
+                  <input type="text" placeholder="Enter tag name" name="tagToBeAdded" id="tagToBeAdded" value={addNewTag} onChange={(e) => setAddNewTag(e.target.value)} />
+                  <button >Add Tag</button>
                 </form>
               </div>
             </Modal>

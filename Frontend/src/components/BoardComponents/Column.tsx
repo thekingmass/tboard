@@ -17,6 +17,8 @@ interface ColumnProps {
   updateUiOnTaskCreation?: (task: Task) => void;
   updateUiOnDelete?: (taskId: string) => void;
   updateUiOnTaskUpdate?: (updatedTask: Task) => void;
+  updateUiOnTagAdd?: (updatedTask: Task) => void;
+  updateUiOnTagRemove?: (updatedTask: Task) => void;
 }
 
 const Column: React.FC<ColumnProps> = ({
@@ -27,6 +29,8 @@ const Column: React.FC<ColumnProps> = ({
   updateUiOnTaskCreation,
   updateUiOnDelete,
   updateUiOnTaskUpdate,
+  updateUiOnTagAdd,
+  updateUiOnTagRemove,
 }) => {
   // console.log("tasks in column:", title, tasks);
 
@@ -35,7 +39,7 @@ const Column: React.FC<ColumnProps> = ({
   //Form Input Fields - to make it controlled components
   const [taskTitle, setTaskTitle] = useState<string>("");
   const [taskPriority, setTaskPriority] = useState<string>("low");
-  const [taskTags, setTaskTags] = useState<string>("");
+  const [taskTagsInutField, settaskTagsInutField] = useState<string>("");
   const [status, setStatus] = useState<string>("in progress");
   const [newTaskOrder, setNewTaskOrder] = useState<number>(tasks.length);
 
@@ -56,7 +60,7 @@ const Column: React.FC<ColumnProps> = ({
       const payload: CreateTaskPayload = {
         title: taskTitle,
         priority: taskPriority as Priority,
-        tags: taskTags,
+        tags: taskTagsInutField,
         status,
         order: newTaskOrder,
         projectId,
@@ -79,7 +83,7 @@ const Column: React.FC<ColumnProps> = ({
       //reset the form fields
       setTaskTitle("");
       setTaskPriority("low");
-      setTaskTags("");
+      settaskTagsInutField("");
       setStatus("in progress");
       setNewTaskOrder(tasks.length + 1);
     } catch (error: any) {
@@ -133,9 +137,9 @@ const Column: React.FC<ColumnProps> = ({
             <input
               type="text"
               id="task-tags"
-              name="taskTags"
-              value={taskTags}
-              onChange={(e) => setTaskTags(e.target.value)}
+              name="taskTagsInutField"
+              value={taskTagsInutField}
+              onChange={(e) => settaskTagsInutField(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -165,6 +169,8 @@ const Column: React.FC<ColumnProps> = ({
                 tags={task.tags}
                 updateUiOnDelete={updateUiOnDelete}
                 updateUiOnTaskUpdate={updateUiOnTaskUpdate}
+                updateUiOnTagAdd={updateUiOnTagAdd}
+                updateUiOnTagRemove={updateUiOnTagRemove}
               />
             ))}
             {provided.placeholder}
