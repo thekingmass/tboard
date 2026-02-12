@@ -2,16 +2,10 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
 }
 
 .AppMain {
     flex: 1;
-}
-
-.Logo h1{
-    color : #3B82F6;
-    margin: 0px;
 }
 
 .Logo img {
@@ -19,7 +13,6 @@
     width: auto;
     border-radius: 6px;
 }
-
 
 .AppHeader{
     /* background-color: #f9fbfd;  */
@@ -75,25 +68,20 @@
 .logOutButton {
     display: flex;
     align-items: center;
-    gap: 8px;
-    display: grid;
-    place-items: center;
+    justify-content: center;
     font-weight: 700;
-    color: #ffffff;
-    background: linear-gradient(135deg, #2f80ed, #56ccf2);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
-    user-select: none;
 }
 
 .logOutIcon {
     width: 24px;
     height: 24px;
-    cursor: pointer;
 }
 
-.logOutIcon:hover{
-    display: block;
+.logOutButton:hover{
+    color:#6c63ff;
+    /* transform: scale(1.1); */
+    animation: ease-in-out 0.2s;
+    cursor:pointer;
 }
 
 .AppFooter{

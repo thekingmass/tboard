@@ -3,12 +3,13 @@ import "./styles/AppLayout.css";
 
 import Button from "./sharedComponents/Button";
 
-import { FiLogOut } from "react-icons/fi";
-import { useAuth } from "../auth/AuthContext";
-
 import { useNavigate } from "react-router-dom";
 
 import ProfileDetailsComponent from "./ProfileDetailsComponent";
+
+// React Icons
+import { useAuth } from "../auth/AuthContext";
+import { AiOutlineLogout } from "react-icons/ai";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -22,6 +23,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   onLogout,
 }) => {
   const { name, initials } = useAuth();
+
+  // Dummy user details for profile component
+  const email = "user@example.com";
+  const userAvatarUrl = "https://picsum.photos/200"; 
+  const joinDate = "January 2023";
+  const location = "Noida, India";
+  const role = "Associate Software Engineer";
+
   const navigate = useNavigate();
 
   const [showProfileDetails, setShowProfileDetails] = useState(false);
@@ -60,16 +69,18 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                   aria-label="User avatar"
                   title={name ?? ""} //will show the name on hover
                 >
-                  {initials}
+                  {userAvatarUrl ? <img src={userAvatarUrl} alt={name ?? "user Name"} className="avatar-image" /> :
+                  initials}
                 </div>
                 {showProfileDetails && (
                   <div className="userDetails">
-                    <ProfileDetailsComponent />
+                    <ProfileDetailsComponent setShowProfileDetails={setShowProfileDetails} userInfo={{ email, joinDate, location, role, userAvatarUrl }} onLogout={onLogout} />
                   </div>
                 )}
               </div>
               <div className="logOutButton">
-                <FiLogOut className="logOutIcon" onClick={onLogout} />
+                <AiOutlineLogout className="logOutIcon" onClick={onLogout} />
+                <span>Logout</span>
               </div>
             </div>
           ) : (

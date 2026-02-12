@@ -32,45 +32,40 @@
 }
 
 
-/* Main Card Container */
+/* Card Container */
 .user-card {
-  width: 320px;
+  min-width: 320px;
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow: hidden; /* Ensures the header corners respect the card border */
+  border-radius: 16px; /* Slightly more rounded for modern look */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  overflow: hidden;
+  transition: transform 0.2s ease;
 }
  
-/* The Blue Background Header */
+/* Blue Header */
 .card-header {
-  height: 120px; /* Arbitrary height */
-  background-color: #2563EB; /* Bright Blue */
+  height: 110px;
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); /* Gradient Blue */
 }
  
-/* Content Area */
+/* Card Body */
 .card-body {
   padding: 0 24px 24px 24px;
   text-align: center;
-  position: relative;
 }
  
-/* The Avatar Container - The Magic happens here */
+/* Avatar - Half In / Half Out Logic */
 .avatar-wrapper {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto; /* Centers the avatar horizontally */
-  
-  /* PULL UP: Move the element up by exactly half its height */
-  margin-top: -50px;
-  
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  margin-top: -48px; /* Exactly half of height (negative) */
   position: relative;
-  z-index: 10; /* Ensures it stays on top */
-  
-  /* The white border creates the separation effect */
   border: 4px solid #ffffff;
   border-radius: 50%;
   background-color: #fff;
+  z-index: 2;
 }
  
 .avatar-image {
@@ -78,43 +73,76 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  display: block;
 }
  
-/* Optional: The 'PRO' badge */
-.badge {
+.pro-badge {
   position: absolute;
   bottom: 0;
   right: 0;
   background-color: #2563EB;
   color: white;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  border: 2px solid white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 6px;
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+  text-transform: uppercase;
 }
  
-/* Typography & Layout */
+/* User Text */
 .user-name {
-  margin-top: 16px;
+  margin-top: 12px;
   margin-bottom: 4px;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1f2937;
+  color: #111827;
 }
  
 .user-email {
   margin: 0;
-  color: #6b7280;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  color: #6B7280;
   margin-bottom: 20px;
 }
  
+/* --- NEW: Navigation Grid --- */
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 Columns */
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #F3F4F6;
+}
+ 
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: #F9FAFB;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+ 
+.nav-item:hover {
+  background-color: #EFF6FF; /* Light blue hover */
+  color: #2563EB;
+}
+ 
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1px;
+}
+ 
+/* Details List */
 .details-list {
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 16px 0;
   margin-bottom: 20px;
   text-align: left;
 }
@@ -122,31 +150,33 @@
 .detail-item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
 }
  
 .detail-label {
-  color: #6b7280;
+  color: #9CA3AF;
 }
  
 .detail-value {
-  color: #1f2937;
-  font-weight: 500;
+  color: #1F2937;
+  font-weight: 600;
 }
  
+/* Button */
 .view-btn {
   width: 100%;
-  padding: 10px;
-  background-color: transparent;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 12px;
+  background-color: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
   font-weight: 600;
   color: #374151;
+  cursor: pointer;
   transition: background 0.2s;
 }
  
 .view-btn:hover {
-  background-color: #f3f4f6;
+  background-color: #F9FAFB;
+  border-color: #D1D5DB;
 }

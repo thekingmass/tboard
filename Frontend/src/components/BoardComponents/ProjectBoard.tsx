@@ -188,7 +188,6 @@ const ProjectBoard: React.FC = () => {
             </div>
             <div className="line1Right">
               <InputBox placeholder="Search tasks..." />
-              <img src="https://picsum.photos/200" alt="User Avatar" />
             </div>
           </div>
           <div className="line2">
