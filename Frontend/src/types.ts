@@ -1,5 +1,7 @@
 export type Priority = 'low' | 'medium' | 'high';
 
+export type projectFilterOptions = 'All' | 'Assigned to me' | 'Created by me' | 'High Priority' | 'Medium Priority' | 'Low Priority';
+
 export interface Project{
   id: string;
   title: string;

@@ -30,9 +30,11 @@ const FilterComp: React.FC = () => {
         setShowDropdown(false);
       }
     }
+
     if (showDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
     }
+    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };

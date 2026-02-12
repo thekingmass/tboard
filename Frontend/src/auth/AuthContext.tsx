@@ -6,12 +6,14 @@ import React, {
   useState,
 } from "react";
 import { api } from "../api";
+import { getUserInitials } from "../utils/initials";
 
 type AuthContextValue = {
   isLoggedIn: boolean;
   login: (token: string, name?: string | null) => void;
   logout: () => void;
   name: string | null;
+  initials: string;
   isAuthLoading: boolean;
 };
 
@@ -79,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const value = useMemo(
-    () => ({ isLoggedIn, isAuthLoading, login, logout, name }),
+    () => ({ isLoggedIn, isAuthLoading, login, logout, name, initials: getUserInitials(name) }),
     [isLoggedIn, isAuthLoading, name]
   );
 

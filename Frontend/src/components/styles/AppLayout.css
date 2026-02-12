@@ -35,6 +35,21 @@
     gap: 16px;
 }
 
+.userIconUserDetails-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.userDetails {
+    position: absolute;
+    top: 100%; /* directly below the icon*/
+    right: 0; /* align right edge */
+    margin-top:8px;
+    /* background-color: cornsilk; */
+    
+    z-index: 1000;
+}
+
 .login-signup-buttons {
     display: flex;
     align-items: center;
