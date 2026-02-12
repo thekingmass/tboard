@@ -8,7 +8,3 @@ h1, h2, h3, .board-title {
 body, p, .task-text {
   font-family: 'Source Sans 3', system-ui, sans-serif;
 }
-
-body{
-  background-color: #e6eef4;
-}
