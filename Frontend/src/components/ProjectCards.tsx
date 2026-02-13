@@ -107,6 +107,12 @@ const ProjectCards: React.FC<ProjectCardProps> = ({ project, onDeleted }) => {
     }
   };
 
+  const handleArchieveProject = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    toast.error("Archive Project feature is not implemented yet.");
+    setIsThreeDotsOpen(false);
+  }
+
   const fetchCount = async () => {
     try {
       const openTaskCountResponse = await api.get<number>(
@@ -148,7 +154,7 @@ const ProjectCards: React.FC<ProjectCardProps> = ({ project, onDeleted }) => {
               <div className="three-dots-menu">
                 <div
                   className="three-dots-menu-item"
-                  onClick={handleThreeDotsOptinsClick}
+                  onClick={handleEditClick}
                 >
                   Edit
                 </div>
@@ -160,7 +166,7 @@ const ProjectCards: React.FC<ProjectCardProps> = ({ project, onDeleted }) => {
                 </div>
                 <div
                   className="three-dots-menu-item"
-                  onClick={handleThreeDotsOptinsClick}
+                  onClick={handleArchieveProject}
                 >
                   Archive
                 </div>

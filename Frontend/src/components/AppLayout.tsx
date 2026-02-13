@@ -78,10 +78,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                   </div>
                 )}
               </div>
-              <div className="logOutButton">
+              {/* <div className="logOutButton">
                 <AiOutlineLogout className="logOutIcon" onClick={onLogout} />
                 <span>Logout</span>
-              </div>
+              </div> */}
             </div>
           ) : (
             <div className="login-signup-buttons">

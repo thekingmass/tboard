@@ -20,8 +20,8 @@
     margin-left: 5px;
 }
 
-.searchBoxWrapper input::placeholder{
-    color: rosybrown
+input::placeholder{
+    color: royalblue;
 }
 
 #searchIcon{
