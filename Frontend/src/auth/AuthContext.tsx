@@ -10,7 +10,7 @@ import { getUserInitials } from "../utils/initials";
 
 type AuthContextValue = {
   isLoggedIn: boolean;
-  login: (token: string, name?: string | null) => void;
+  login: (name?: string | null) => void;
   logout: () => void;
   name: string | null;
   initials: string;
@@ -88,6 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
