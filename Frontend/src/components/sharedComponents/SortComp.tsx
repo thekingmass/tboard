@@ -1,6 +1,6 @@
 import React from "react";
-import "../sharedComponents/SortComp.css";
-import { BiSortAlt2 } from "react-icons/bi";
+import SortRoundedIcon from "@mui/icons-material/SortRounded";
+import { InputAdornment, MenuItem, TextField } from "@mui/material";
 
 const sortOptions = [
     { value: "dateModified", label: "Date Modified" },
@@ -11,16 +11,22 @@ const sortOptions = [
 
 const SortComp: React.FC = () => {
     return (
-        <div className="SortWrapper">
-            <BiSortAlt2 className="sort-icon" />
-            <select className="sort-dropdown" id="sortSelect" name="sortSelect">
+        <TextField select defaultValue="dateModified" id="sortSelect" name="sortSelect" sx={{ minWidth: 220 }}
+            slotProps={{
+                input: {
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <SortRoundedIcon color="action" />
+                        </InputAdornment>
+                    )
+                }
+            }}>
                 {sortOptions.map(option => (
-                    <option style={{ width: "250px" }} key={option.value} value={option.value}>
+                    <MenuItem key={option.value} value={option.value}>
                         {option.label}
-                    </option>
+                    </MenuItem>
                 ))}
-            </select>
-        </div>
+            </TextField>
     );
 };
 

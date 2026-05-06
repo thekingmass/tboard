@@ -1,6 +1,6 @@
 import React from "react";
-import PlusButton from "./PlusButton";
-import "./NewProjectButton.css";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { Button } from "@mui/material";
 
 
 interface NewProjectButtonProps {
@@ -9,10 +9,9 @@ interface NewProjectButtonProps {
 
 const NewProjectButton: React.FC<NewProjectButtonProps> = ({ onClick }) => {
     return (
-        <button className="NewProjectButton" onClick={onClick}>
-            <span className="buttonText">New Project</span>
-            <PlusButton />
-        </button>
+        <Button variant="contained" startIcon={<AddCircleOutlineRoundedIcon />} onClick={onClick} sx={{ minHeight: 56, px: 3 }}>
+            New Project
+        </Button>
     );
 }
 

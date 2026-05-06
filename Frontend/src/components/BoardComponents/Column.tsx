@@ -3,11 +3,26 @@ import React, { useState } from "react";
 import type { Task, ApiTask, CreateTaskPayload, Priority } from "../../types";
 import { mapApiTaskToTask } from "../../types";
 import TaskCard from "./TaskCard";
-import "./Column.css";
-import Modal from "../sharedComponents/Modal";
 import { Droppable } from "@hello-pangea/dnd";
 import { api } from "../../api";
 import { toast } from "sonner";
+import {
+  alpha,
+  Badge,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  MenuItem,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AddTaskRoundedIcon from "@mui/icons-material/AddTaskRounded";
 
 interface ColumnProps {
   id: string;
@@ -86,78 +101,147 @@ const Column: React.FC<ColumnProps> = ({
       settaskTagsInutField("");
       setStatus("in progress");
       setNewTaskOrder(tasks.length + 1);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const requestError = error as { response?: { data?: { message?: string } } };
       console.error("Error validating task input:", error);
-      toast.error(error.response?.data?.message || "Failed to create task.");
+      toast.error(requestError.response?.data?.message || "Failed to create task.");
     }
   };
 
   return (
-    <div className="board-column" data-column-id={id}>
-      <div className="board-column-header">
-        <h2>{title}</h2>
-        {/* <span className="task-count">{tasks.length}</span> */}
-      </div>
+    <Paper
+      data-column-id={id}
+      elevation={0}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: { xs: "100%", sm: 340 },
+        minWidth: { xs: "100%", sm: 340 },
+        maxHeight: "100%",
+        borderRadius: 5,
+        bgcolor: "rgba(255,255,255,0.72)",
+        border: "1px solid rgba(148, 163, 184, 0.22)",
+        boxShadow: "0 18px 42px rgba(15, 23, 42, 0.08)",
+      }}
+    >
+      <Stack spacing={2} sx={{ p: 2.25, pb: 1.5 }}>
+        <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
+          <Stack spacing={0.5} sx={{ minWidth: 0 }}>
+            <Typography variant="overline" sx={{ color: "text.secondary", letterSpacing: 1.4 }}>
+              Workflow lane
+            </Typography>
+            <Typography variant="h6" noWrap sx={{ fontWeight: 700 }}>
+              {title}
+            </Typography>
+          </Stack>
+          <Badge
+            badgeContent={tasks.length}
+            color="primary"
+            sx={{ "& .MuiBadge-badge": { fontWeight: 700 } }}
+          >
+            <Box
+              sx={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                bgcolor: alpha("#2563eb", 0.28),
+                border: "1px solid rgba(37, 99, 235, 0.32)",
+              }}
+            />
+          </Badge>
+        </Stack>
 
-      <div className="add-task-button-container">
-        <button onClick={() => setTaskModal(true)}>+ Add Task</button>
-      </div>
-      <Modal
-        isOpen={taskModalOpen}
-        onClose={() => setTaskModal(false)}
-        title={"Create A New Task"}
-      >
-        {/* Task creation/Updation form goes here */}
-        <form className="task-creation-updation-form" onSubmit={onCreateTaskSubmit}>
-          <div className="form-group">
-            <label htmlFor="task-title">Task Title</label>
-            <input
-              type="text"
+        <Button
+          variant="contained"
+          startIcon={<AddTaskRoundedIcon />}
+          onClick={() => setTaskModal(true)}
+          sx={{
+            alignSelf: "stretch",
+            justifyContent: "flex-start",
+            borderRadius: 3,
+            px: 2,
+            py: 1,
+            textTransform: "none",
+            fontWeight: 700,
+            background: "linear-gradient(135deg, #0f766e 0%, #14b8a6 100%)",
+            boxShadow: "none",
+          }}
+        >
+          Add task
+        </Button>
+      </Stack>
+
+      <Divider />
+
+      <Dialog open={taskModalOpen} onClose={() => setTaskModal(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Create a new task</DialogTitle>
+        <Box component="form" onSubmit={onCreateTaskSubmit}>
+          <DialogContent sx={{ display: "grid", gap: 2, pt: 1 }}>
+            <TextField
+              label="Task title"
               id="task-title"
               name="taskTitle"
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
+              fullWidth
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="task-priority">Task Priority</label>
-            <select
+            <TextField
+              select
+              label="Task priority"
               id="task-priority"
               name="taskPriority"
               value={taskPriority}
               onChange={(e) => setTaskPriority(e.target.value)}
+              fullWidth
             >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="task-tags">Task Tags (comma separated)</label>
-            <input
-              type="text"
+              <MenuItem value="low">Low</MenuItem>
+              <MenuItem value="medium">Medium</MenuItem>
+              <MenuItem value="high">High</MenuItem>
+            </TextField>
+            <TextField
+              label="Task tags"
               id="task-tags"
               name="taskTagsInutField"
+              helperText="Use commas to add multiple tags."
               value={taskTagsInutField}
               onChange={(e) => settaskTagsInutField(e.target.value)}
+              fullWidth
             />
-          </div>
-          <div className="form-group">
-            <button type="submit" className="create-task-button">
-              Create Task
-            </button>
-          </div>
-        </form>
-      </Modal>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 3 }}>
+            <Button onClick={() => setTaskModal(false)} color="inherit">
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained">
+              Create task
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
 
       {/* Tasks list */}
       {/* Make the column Area Droppable where the tasks will be dropped */}
       <Droppable droppableId={id}>
-        {(provided) => (
-          <div
-            className="board-column-body"
+        {(provided, snapshot) => (
+          <Box
             ref={provided.innerRef}
             {...provided.droppableProps}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.25,
+              p: 1.5,
+              minHeight: 180,
+              overflowY: "auto",
+              backgroundColor: snapshot.isDraggingOver 
+                ? "rgba(15, 118, 110, 0.08)" 
+                : "rgba(248, 250, 252, 0.76)",
+              border: snapshot.isDraggingOver 
+                ? "2px dashed #0f766e" 
+                : "none",
+              borderRadius: 3,
+              transition: "background-color 150ms ease, border 150ms ease",
+            }}
           >
             {tasks.map((task, index) => (
               <TaskCard
@@ -174,10 +258,10 @@ const Column: React.FC<ColumnProps> = ({
               />
             ))}
             {provided.placeholder}
-          </div>
+          </Box>
         )}
       </Droppable>
-    </div>
+    </Paper>
   );
 };
 

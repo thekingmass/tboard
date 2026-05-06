@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./NewProjectForm.css";
+import { Alert, Box, Button, Stack, TextField } from "@mui/material";
 
 import { api } from "../../api";
 import { TITLE_MAX_LEN } from "../../types"
@@ -80,39 +80,40 @@ const NewProjectForm: React.FC<NewProjectFormProps> = ({
   };
 
   return (
-    <form className="NewProjectForm" onSubmit={handleCreateProject}>
-      <div className="formFields">
-        <input
+    <Box component="form" onSubmit={handleCreateProject} sx={{ display: "grid", gap: 2 }}>
+      <TextField
+          label="Project title"
           type="text"
-          placeholder="Project Title"
           value={projectTitle}
           onChange={onChangeProjectTitle}
+          slotProps={{ htmlInput: { maxLength: TITLE_MAX_LEN } }}
           required
         />
-        <textarea
-          maxLength={DESCRIPTION_MAX_LEN}
-          placeholder="Project Description"
+        <TextField
+          multiline
+          minRows={4}
+          label="Project description"
           value={projectDescription}
           onChange={onChangeProjectDescription}
+          slotProps={{ htmlInput: { maxLength: DESCRIPTION_MAX_LEN } }}
           required
         />
-      </div>
 
       {submitError && (
-        <p style={{ color: "#b42318", margin: "0", textAlign: "left" }}>
+        <Alert severity="error">
           {submitError}
-        </p>
+        </Alert>
       )}
 
-      <div className="form-buttons">
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating..." : "Create"}
-        </button>
-        <button type="button" onClick={onDismiss} disabled={isSubmitting}>
+      <Stack direction="row" spacing={1.5} sx={{ justifyContent: "flex-end" }}>
+        <Button type="button" onClick={onDismiss} disabled={isSubmitting} color="inherit">
           Cancel
-        </button>
-      </div>
-    </form>
+        </Button>
+        <Button type="submit" disabled={isSubmitting} variant="contained">
+          {isSubmitting ? "Creating..." : "Create"}
+        </Button>
+      </Stack>
+    </Box>
   );
 };
 

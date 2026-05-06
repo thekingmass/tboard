@@ -9,6 +9,7 @@
     "test:email": "ts-node-dev --transpile-only src/scripts/testEmailValidation.ts",
     "seed:columns": "ts-node-dev --transpile-only src/scripts/seedDefaultColumns.ts",
     "seed:tasks": "ts-node ./src/scripts/seedDefaultTasks.ts",
+    "seed:tasks:empty-projects": "ts-node ./src/scripts/seedEmptyProjectTasks.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },

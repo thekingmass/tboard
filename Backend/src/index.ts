@@ -102,6 +102,7 @@ async function start() {
 
     // Seed initial data if needed
     // await seedProjectsIfEmpty();
+    // await seedEmptyProjectTasks();
 
     app.listen(PORT, () => {
       console.log(`🚀 Backend API running on http://localhost:${PORT}`);

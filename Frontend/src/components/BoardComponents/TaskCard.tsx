@@ -1,17 +1,36 @@
 // TaskCard.tsx
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import type { Priority, Task as UiTask } from "../../types";
-import "./TaskCard.css";
-import { CiCirclePlus } from "react-icons/ci";
-import { RxCrossCircled } from "react-icons/rx";
-import { MdOutlineEdit } from "react-icons/md";
-import { MdDeleteForever } from "react-icons/md";
-import Modal from "../sharedComponents/Modal";
 import { mapApiTaskToTask } from "../../types";
 
 import { Draggable } from "@hello-pangea/dnd";
 import { api } from "../../api";
 import { toast } from "sonner";
+import {
+  alpha,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import FlagRoundedIcon from "@mui/icons-material/FlagRounded";
 
 interface TaskCardProps {
   id: string;
@@ -36,12 +55,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
   updateUiOnTagAdd,
   updateUiOnTagRemove,
 }) => {
-  const priorityColor =
+  const priorityTone =
     priority === "high"
-      ? "#e53e3e"
+      ? { color: "#b91c1c", background: "#fee2e2", border: "#fecaca" }
       : priority === "medium"
-        ? "#d69e2e"
-        : "#38a169";
+        ? { color: "#b45309", background: "#fef3c7", border: "#fde68a" }
+        : { color: "#166534", background: "#dcfce7", border: "#bbf7d0" };
 
   const [isAddTagVisible, setIsAddTagVisible] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -134,7 +153,7 @@ const handleAddTagSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
       // Mapping the updated task from API response to UiTask
       const updatedTask = mapApiTaskToTask(responseTask);
       // Update the UI by informing the parent component
-      updateUiOnTaskUpdate && updateUiOnTaskUpdate(updatedTask);
+      updateUiOnTaskUpdate?.(updatedTask);
 
       const responseMessage = response.data.message;
       toast.success(responseMessage);
@@ -170,115 +189,213 @@ const handleAddTagSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
   return (
     // make the task card draggable by wrapping it with Draggable component
     <Draggable draggableId={id} index={index}>
-      {(provided) => (
-        <div
-          className="task-card"
+      {(provided, snapshot) => {
+        const taskCardNode = (
+          <Card
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
+          style={provided.draggableProps.style}
           task-data-id={id}
+          elevation={snapshot.isDragging ? 8 : 0}
+          sx={{
+            position: "relative",
+            zIndex: snapshot.isDragging ? 1600 : "auto",
+            borderRadius: 3,
+            border: snapshot.isDragging 
+              ? "2px solid #1d4ed8" 
+              : "1px solid rgba(226, 232, 240, 0.95)",
+            boxShadow: snapshot.isDragging 
+              ? "0 20px 50px rgba(29, 78, 216, 0.35)" 
+              : "0 10px 28px rgba(15, 23, 42, 0.06)",
+            transition: "all 160ms ease",
+            backgroundColor: snapshot.isDragging ? "rgba(29, 78, 216, 0.03)" : "white",
+            opacity: snapshot.isDragging ? 0.95 : 1,
+            "&:hover": {
+              boxShadow: snapshot.isDragging 
+                ? "0 20px 50px rgba(29, 78, 216, 0.35)"
+                : "0 16px 36px rgba(15, 23, 42, 0.10)",
+              borderColor: snapshot.isDragging ? "#1d4ed8" : "rgba(59, 130, 246, 0.28)",
+            },
+          }}
         >
-          <div className="task-card-header">
-            <div className="task-title">{title}</div>
-            <div className="task-card-actions">
-              <span
-                onClick={handleEditTaskClick}
-                className="task-card-edit-icon"
+          <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
+            <Stack spacing={1.5}>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{ justifyContent: "space-between", alignItems: "flex-start" }}
               >
-                <MdOutlineEdit />
-              </span>
-              <span
-                onClick={handleTaskDeleteClick}
-                className="task-card-delete-icon"
-              >
-                <MdDeleteForever />
-              </span>
-            </div>
-          </div>
+                <Stack direction="row" spacing={0.5} sx={{ minWidth: 0, flex: 1, alignItems: "flex-start" }}>
+                  <Tooltip title="Drag task">
+                    <IconButton
+                      size="small"
+                      {...provided.dragHandleProps}
+                      sx={{
+                        mt: -0.25,
+                        color: "text.secondary",
+                        cursor: "grab",
+                        touchAction: "none",
+                      }}
+                    >
+                      <DragIndicatorRoundedIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Typography variant="subtitle1" sx={{ lineHeight: 1.3, wordBreak: "break-word", fontWeight: 700 }}>
+                    {title}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={0.25}>
+                  <Tooltip title="Edit task">
+                    <IconButton size="small" onClick={handleEditTaskClick}>
+                      <EditOutlinedIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete task">
+                    <IconButton size="small" color="error" onClick={handleTaskDeleteClick}>
+                      <DeleteOutlineRoundedIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
+              </Stack>
 
-          <div className="task-card-footer">
-            <span
-              className="task-priority"
-              style={{
-                backgroundColor: priorityColor,
-                color: "white",
-                padding: "0.1rem 0.4rem",
-                borderRadius: "4px",
-                fontSize: "0.75rem",
-              }}
-            >
-              {priority.toUpperCase()}
-            </span>
+              <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap", alignItems: "center" }}>
+                <Chip
+                  icon={<FlagRoundedIcon />}
+                  label={priority.toUpperCase()}
+                  size="small"
+                  sx={{
+                    fontWeight: 700,
+                    color: priorityTone.color,
+                    bgcolor: priorityTone.background,
+                    border: `1px solid ${priorityTone.border}`,
+                    ".MuiChip-icon": { color: priorityTone.color },
+                  }}
+                />
+              </Stack>
 
-            <div className="task-tags">
+              <Stack direction="row" spacing={0.75} useFlexGap sx={{ flexWrap: "wrap", alignItems: "center" }}>
               {tags.map((tag) => (
-                <span key={tag} className="tags">
-                  {tag}
-                  <RxCrossCircled className="tag-remove-icon" onClick={() => removeTag(tag)} />
-                </span>
+                <Chip
+                  key={tag}
+                  label={tag}
+                  size="small"
+                  onDelete={() => removeTag(tag)}
+                  deleteIcon={<CloseRoundedIcon />}
+                  sx={{
+                    bgcolor: alpha("#2563eb", 0.08),
+                    color: "#1d4ed8",
+                    border: "1px solid rgba(37, 99, 235, 0.16)",
+                  }}
+                />
               ))}
-              <span className="addTagButton">
-                <CiCirclePlus onClick={handleAddTagButtonClick} />
-              </span>
-            </div>
+                <Button
+                  variant="text"
+                  size="small"
+                  startIcon={<AddRoundedIcon />}
+                  onClick={handleAddTagButtonClick}
+                  sx={{
+                    minWidth: 0,
+                    px: 1,
+                    borderRadius: 3,
+                    textTransform: "none",
+                    fontWeight: 700,
+                  }}
+                >
+                  Add tag
+                </Button>
+              </Stack>
+            </Stack>
             {/* Add Tag Modal Goes Below */}
-            <Modal
-              isOpen={isAddTagVisible}
+            <Dialog
+              open={isAddTagVisible}
               onClose={() => setIsAddTagVisible(false)}
-              title="Add Tags"
+              fullWidth
+              maxWidth="xs"
             >
-              <div className="addTagmodal-body">
-                <form onSubmit={handleAddTagSubmit} className="addTag-form modal-form">
-                  <label htmlFor="tagToBeAdded">Use comma(,) for Multiple tags</label>
-                  <input type="text" placeholder="Enter tag name" name="tagToBeAdded" id="tagToBeAdded" value={addNewTag} onChange={(e) => setAddNewTag(e.target.value)} />
-                  <button >Add Tag</button>
-                </form>
-              </div>
-            </Modal>
-          </div>
+              <DialogTitle>Add tags</DialogTitle>
+              <Box component="form" onSubmit={handleAddTagSubmit}>
+                <DialogContent sx={{ display: "grid", gap: 2, pt: 1 }}>
+                  <TextField
+                    label="Tags"
+                    placeholder="Design, backend, urgent"
+                    name="tagToBeAdded"
+                    id="tagToBeAdded"
+                    helperText="Use commas to add multiple tags."
+                    value={addNewTag}
+                    onChange={(e) => setAddNewTag(e.target.value)}
+                    fullWidth
+                  />
+                </DialogContent>
+                <DialogActions sx={{ px: 3, pb: 3 }}>
+                  <Button onClick={() => setIsAddTagVisible(false)} color="inherit">
+                    Cancel
+                  </Button>
+                  <Button type="submit" variant="contained">
+                    Add tag
+                  </Button>
+                </DialogActions>
+              </Box>
+            </Dialog>
+
           {/* Edit Task Modal Goes Below */}
-          <Modal
-            isOpen={isEditModalOpen}
-            onClose={() => setIsEditModalOpen(false)}
-            title="Edit Task"
-          >
-            <div className="editTaskModal-body">
-              <form action="" className="editTask-form modal-form">
-                <label htmlFor="edit-task-title">Task Title</label>
-                <input
-                  type="text"
+            <Dialog
+              open={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              fullWidth
+              maxWidth="sm"
+            >
+              <DialogTitle>Edit task</DialogTitle>
+              <DialogContent sx={{ display: "grid", gap: 2, pt: 1 }}>
+                <TextField
+                  label="Task title"
                   id="edit-task-title"
                   value={taskTitle}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setTitle(event.target.value);
                   }}
+                  fullWidth
                 />
-                <label htmlFor="edit-task-priority">Task Priority</label>
-                <select
+                <TextField
+                  select
+                  label="Task priority"
                   name="edit-task-priority"
                   id="edit-task-priority"
                   value={taskPriority}
                   onChange={(e) => setTaskPriority(e.target.value)}
+                  fullWidth
                 >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
-                <label htmlFor="edit-task-tags">Task Tags</label>
-                <input
-                  type="text"
+                  <MenuItem value="low">Low</MenuItem>
+                  <MenuItem value="medium">Medium</MenuItem>
+                  <MenuItem value="high">High</MenuItem>
+                </TextField>
+                <TextField
+                  label="Task tags"
                   id="edit-task-tags"
+                  helperText="Keep tags comma separated."
                   value={taskTags}
                   onChange={(e) => setTaskTags(e.target.value)}
+                  fullWidth
                 />
-                <button type="button" onClick={handleUpdateButtonClick}>
-                  Update Task
-                </button>
-              </form>
-            </div>
-          </Modal>
-        </div>
-      )}
+              </DialogContent>
+              <DialogActions sx={{ px: 3, pb: 3 }}>
+                <Button onClick={() => setIsEditModalOpen(false)} color="inherit">
+                  Cancel
+                </Button>
+                <Button type="button" variant="contained" onClick={handleUpdateButtonClick}>
+                  Update task
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </CardContent>
+        </Card>
+        );
+
+        if (snapshot.isDragging) {
+          return createPortal(taskCardNode, document.body);
+        }
+
+        return taskCardNode;
+      }}
     </Draggable>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import "../sharedComponents/InputBox.css";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { InputAdornment, TextField } from "@mui/material";
 
 interface InputBoxProps {
   placeholder?: string;
@@ -18,16 +18,22 @@ const InputBox: React.FC<InputBoxProps> = ({ placeholder, onChange }) => {
   }
 
   return (
-    <div className="searchBoxWrapper">
-      <FaSearch className="searchIcon" id="searchIcon" />
-      <input
+    <TextField
+        fullWidth
         onChange={handleChange}
-        type="text"
         placeholder={placeholder}
         name="searchText"
         value={searchText}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchRoundedIcon color="action" />
+              </InputAdornment>
+            ),
+          },
+        }}
       />
-    </div>
   );
 };
 

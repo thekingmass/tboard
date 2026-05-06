@@ -1,7 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { CiFilter } from "react-icons/ci";
-import { IoIosArrowDown } from "react-icons/io";
-import "./FilterComp.css";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import {
+  Checkbox,
+  FormControlLabel,
+  ListSubheader,
+  Menu,
+  MenuItem,
+  Button,
+} from "@mui/material";
 
 const filterOptions = [
   "In Progress",
@@ -14,6 +20,7 @@ const FilterComp: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleCheckboxChange = (option: string) => {
     setSelectedFilters(prev =>
@@ -43,27 +50,34 @@ const FilterComp: React.FC = () => {
   return (
     <div className="FilterWrapper">
       <div className="Filter" ref={dropdownRef} style={{ position: "relative" }}>
-        <button
+        <Button
           type="button"
-          className="filter-dropdown-btn"
-          onClick={() => setShowDropdown(prev => !prev)}
+          variant="outlined"
+          color="inherit"
+          startIcon={<FilterAltOutlinedIcon />}
+          onClick={(event) => {
+            setShowDropdown((prev) => !prev);
+            setAnchorEl(event.currentTarget);
+          }}
+          sx={{ justifyContent: "flex-start" }}
         >
-          <CiFilter /> <span>Filter</span> <IoIosArrowDown />
-        </button>
-        {showDropdown && (
-          <div className="filter-dropdown">
-            {filterOptions.map(option => (
-              <label className="filter-option" key={option}>
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.includes(option)}
-                  onChange={() => handleCheckboxChange(option)}
-                />
-                {option}
-              </label>
-            ))}
-          </div>
-        )}
+          {selectedFilters.length ? `Filter (${selectedFilters.length})` : "Filter"}
+        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          open={showDropdown}
+          onClose={() => setShowDropdown(false)}
+        >
+          <ListSubheader>Project status</ListSubheader>
+          {filterOptions.map(option => (
+            <MenuItem key={option} onClick={() => handleCheckboxChange(option)}>
+              <FormControlLabel
+                control={<Checkbox checked={selectedFilters.includes(option)} />}
+                label={option}
+              />
+            </MenuItem>
+          ))}
+        </Menu>
       </div>
     </div>
   );

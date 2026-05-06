@@ -1,9 +1,0 @@
-.plus-button{
-    cursor: pointer;
-    margin-left: 5px;
-}
-
-.plus-button:hover{
-    transform: scale(1.05);
-    transition: transform 0.2s;
-}
