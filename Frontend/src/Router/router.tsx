@@ -8,6 +8,7 @@ import ProjectBoard from '../components/ProjectComponent/ProjectBoard.tsx';
 import ProtectedRoute from '../auth/ProtectedRoute.tsx';
 import ContactUs from '../components/contactUs/ContactUs.tsx';
 import AboutUs from '../components/aboutUs/AboutUs.tsx';
+import UserDetails from '../components/ProfileComponent/UserDetails.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
       { path: 'signup', element: <Signup /> },
       {path: 'aboutus', element: <AboutUs />},
       {path: 'contactus', element: <ContactUs />},
+      {path: 'profileDetails', element: <UserDetails />},
       {
         path: 'projects',
         element: (

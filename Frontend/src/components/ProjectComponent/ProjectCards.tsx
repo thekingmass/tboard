@@ -40,7 +40,7 @@ const ProjectCards: React.FC<ProjectCardProps> = ({ project, onDeleted }) => {
   const projectId = project.id;
 
   const handleOpenBoard = () => {
-    if (!projectId) return;
+    if (!projectId || isThreeDotsOpen) return;
     navigate(`/projects/${projectId}`);
   };
 
@@ -60,6 +60,8 @@ const ProjectCards: React.FC<ProjectCardProps> = ({ project, onDeleted }) => {
     setProjectTitle(project.title ?? "");
     setProjectDescription(project.description ?? "");
     setIsEditmodalOpen(true);
+    setIsThreeDotsOpen(false);
+    setMenuAnchorEl(null);
   };
 
   const handleUpdateProject = async (

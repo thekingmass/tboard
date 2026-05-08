@@ -1,13 +1,13 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "../../auth/AuthContext";
-import ProfileDetailsComponent from "./ProfileDetailsComponent";
+import UserActionPopover from "./UserActionPopover";
 import { Avatar, Box, IconButton, Popover } from "@mui/material";
 
 type Props = {
     onLogout: () => void;
 }
 
-export default function UserProfileInfo({ onLogout }: Props) {
+export default function UserProfileAvatar({ onLogout }: Props) {
 
     const { name, initials } = useAuth();
 
@@ -23,20 +23,6 @@ export default function UserProfileInfo({ onLogout }: Props) {
     const [showProfileDetails, setShowProfileDetails] = useState(false);
     const profileDetailsRef = useRef<HTMLDivElement | null>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-    useEffect(() => {
-
-        function handleClickOutside(event: MouseEvent) {
-            if (profileDetailsRef.current && !profileDetailsRef.current.contains(event.target as Node)) {
-                setShowProfileDetails(false);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
 
     return (
         <Box ref={profileDetailsRef}>
@@ -74,7 +60,7 @@ export default function UserProfileInfo({ onLogout }: Props) {
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
                 slotProps={{ paper: { sx: { mt: 2, borderRadius: 3, overflow: "visible", boxShadow: "0 24px 48px rgba(15,23,42,0.16)" } } }}
             >
-                <ProfileDetailsComponent setShowProfileDetails={setShowProfileDetails} userInfo={{ email, joinDate, location, role, userAvatarUrl }} onLogout={onLogout} />
+                <UserActionPopover setShowProfileDetails={setShowProfileDetails} userInfo={{ email, joinDate, location, role, userAvatarUrl }} onLogout={onLogout} />
             </Popover>
         </Box>
     )

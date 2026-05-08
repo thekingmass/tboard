@@ -6,7 +6,7 @@ import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import MenuItemLink from "../shared/MenuItemLink";
-import UserProfileInfo from "../ProfileComponent/UserProfileInfo";
+import UserProfileAvatar from "../ProfileComponent/UserProfileAvatar";
 import { useAuth } from "../../auth/AuthContext";
 
 type Props = {
@@ -68,7 +68,7 @@ export default function Navbar({ onLogout }: Props) {
                 Contact Us
               </MenuItemLink>
             </Stack>
-            {isLoggedIn ? ( <UserProfileInfo onLogout={onLogout} /> ) : (
+            {isLoggedIn ? ( <UserProfileAvatar onLogout={onLogout} /> ) : (
               <MenuItemLink to="/login" icon={<LoginRoundedIcon fontSize="small" />}>
                 Login
               </MenuItemLink>

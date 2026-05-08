@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
       <AuthProvider>
-        <Toaster richColors position="top-right" duration={2000}/>
+        <Toaster richColors position="top-right" duration={3000}/>
         <RouterProvider router={router} />
       </AuthProvider>
     </ThemeProvider>

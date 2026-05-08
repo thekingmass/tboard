@@ -2,7 +2,8 @@ import React from "react";
 import { useAuth } from "../../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
@@ -10,7 +11,7 @@ import WorkOutlineRoundedIcon from "@mui/icons-material/WorkOutlineRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import { Avatar, Box, Button, Chip, Divider, Stack, Typography } from "@mui/material";
 
-interface ProfileDetailsComponentProps {
+interface UserActionPopoverProps {
   setShowProfileDetails: React.Dispatch<React.SetStateAction<boolean>>;
   userInfo: {
     email: string;
@@ -24,7 +25,7 @@ interface ProfileDetailsComponentProps {
 
 // will implement a getProfileDetails api call later to fetch user details
 
-const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ setShowProfileDetails, userInfo, onLogout }) => {
+const UserActionPopover: React.FC<UserActionPopoverProps> = ({ setShowProfileDetails, userInfo, onLogout }) => {
 
   const navigate = useNavigate();
 
@@ -57,7 +58,6 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ setSh
           </Box>
         </Stack>
       </Box>
-
       <Stack spacing={2} sx={{ p: 2.5 }}>
         <Stack spacing={1} sx={{ alignItems: "flex-start" }}>
           <Button startIcon={<DashboardRoundedIcon />} onClick={() => { navigate("/projects"); setShowProfileDetails(false); }}>
@@ -66,8 +66,9 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ setSh
           <Button startIcon={<HomeOutlinedIcon />} onClick={() => { navigate("/"); setShowProfileDetails(false); }}>
             Home
           </Button>
-          <Button startIcon={<EditOutlinedIcon />} color="inherit">
-            Edit Profile
+          <Button startIcon={<AccountCircleOutlinedIcon />} 
+         onClick={() => {navigate("/profileDetails"); setShowProfileDetails(false);}} color="inherit">
+            Profile Details
           </Button>
           <Button startIcon={<LogoutRoundedIcon />} color="inherit" onClick={onLogout}>
             Logout
@@ -95,4 +96,4 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ setSh
   );
 };
 
-export default ProfileDetailsComponent;
+export default UserActionPopover;

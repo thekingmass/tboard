@@ -13,6 +13,8 @@ const ProjectComponents: React.FC = () => {
 
   const [projects, setProjects] = useState<UiProject[]>([]);
 
+  let filteredProjects: UiProject[] = [];
+
   const fetchProjects = async () => {
     try {
 
@@ -35,6 +37,13 @@ const ProjectComponents: React.FC = () => {
     }
   };
 
+  const isProjectAvailableForTheUser = () => {
+    if (projects.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
   useEffect(() => {
     let cancelled = false;
 
@@ -51,7 +60,14 @@ const ProjectComponents: React.FC = () => {
     };
   }, []);
 
-  const filteredProjects = projects.filter(project => project.title.toLowerCase().includes(searchText.toLowerCase()));
+
+  useEffect(
+    () => {
+      
+    }, [projects]
+  )
+
+  filteredProjects = projects.filter(project => project.title.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
     <Stack spacing={2.5}>
@@ -66,11 +82,16 @@ const ProjectComponents: React.FC = () => {
       <TopControl onSearch={setSearchText} onCreated={fetchProjects} />
       {/* <FilterSortComponent /> */}
       <Grid container spacing={2.5}>
-        {filteredProjects.map(project => (
+        {isProjectAvailableForTheUser() ?(
+          filteredProjects.map(project => (
           <Grid key={project.id} size={{ xs: 12, md: 6, xl: 4 }}>
             <ProjectCards project={project} onDeleted={fetchProjects} />
           </Grid>
-        ))}
+        ))
+        ) : (
+          <Typography>Create Projects to get started</Typography>
+        )}
+        
       </Grid>
     </Stack>
   );

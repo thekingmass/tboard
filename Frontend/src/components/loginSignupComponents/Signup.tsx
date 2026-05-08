@@ -3,13 +3,15 @@ import {toast} from "sonner";
 
 import axios from 'axios';
 import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup: React.FC = () => {
   const [signupName, setSignupName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,6 +63,7 @@ const Signup: React.FC = () => {
     setSignupPassword("");
     setSignupConfirmPassword("");
     toast.success(`Hi ${signupName}, Signup successful! Please log in`);
+    navigate("/login");
 
 
   };

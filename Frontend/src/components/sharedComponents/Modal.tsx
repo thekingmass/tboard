@@ -15,7 +15,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={maxWidth}>
       {title ? (
-        <DialogTitle sx={{ pr: 1.5 }}>
+        <DialogTitle sx={{ pr: 1.5}}>
           <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between" }}>
             <span>{title}</span>
             <IconButton onClick={onClose} size="small">
@@ -24,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
           </Stack>
         </DialogTitle>
       ) : null}
-      <DialogContent>{children}</DialogContent>
+      <DialogContent sx={{overflow: "visible"}}>{children}</DialogContent>
     </Dialog>
   );
 };
